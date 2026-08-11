@@ -1,30 +1,38 @@
-# ETL Lab Report
+# ETL Pipeline Report - CampusMart
 
-Student ID:
-Name:
+## คำตอบสรุปผลการทำงาน (Report Answers)
 
-## 1. Data Quality Problems Found
--
+### 1. พบ Data Quality Problem อะไรบ้าง
+* **Customers:** มีข้อมูลจังหวัด (`province`) พิมพ์หลากหลายรูปแบบ เช่น ภาษาไทย ภาษาอังกฤษ ตัวย่อ รวมถึงมีค่าว่าง (`NaN`)
+* **Products:** โครงสร้างข้อมูลเป็นแบบ Nested JSON ซ้อนกัน และฟิลด์ราคาบางรายการไม่ใช่ตัวเลข
+* **Orders:** 
+  * พบรูปแบบวันที่ผสมกัน (`Mixed Formats`) และมีข้อมูลวันที่ผิดปกติ (เช่น `"not-a-date"`)
+  * มีรายการที่ข้อมูลไม่ถูกต้องตามหลักธุรกิจ ได้แก่ จำนวนสินค้าติดลบ (`qty = -2`), ราคาต่อหน่วยติดลบ (`unit_price = -100`), และส่วนลดเกิน 100% (`discount_pct = 150`)
 
-## 2. Cleaning / Transformation Rules
--
+---
 
-## 3. Rejected Records
-จำนวน:
+### 2. แก้แต่ละปัญหาอย่างไร
+* **Standardize Province:** ใช้ `PROVINCE_MAP` แปลงชื่อจังหวัดต่าง ๆ ให้เป็นมาตรฐานเดียวกัน และแทนที่ค่าว่างด้วย `"Unknown"`
+* **Flatten & Clean Products:** ใช้ `json_normalize` แตกฟิลด์ JSON ที่ซ้อนกัน เปลี่ยนชื่อคอลัมน์ให้อยู่ในรูปแบบมาตรฐาน แปลงราคาเป็น Numeric ด้วย `pd.to_numeric()` และเติมค่าว่างหมวดหมู่ด้วย `"Unknown"`
+* **Clean & Validate Orders:**
+  * ใช้ `pd.to_datetime(format="mixed", errors="coerce")` แปลงวันที่ และกรองรายการที่ไม่ใช่วันที่ออก
+  * สร้างเงื่อนไขตรวจสอบเพื่อกรองรายการที่มี `qty <= 0`, `unit_price <= 0`, หรือ `discount_pct` นอกช่วง 0–100 ออกไปเก็บไว้ใน `rejects.csv`
+  * กรองเฉพาะคำสั่งซื้อที่มีสถานะเป็น `paid` หรือ `completed` และตรวจสอบว่าอ้างอิง `customer_id` และ `product_id` ที่มีอยู่จริงในตารางหลักเท่านั้น
 
-เหตุผลหลัก:
+---
 
-## 4. ETL Validation
-- Valid transformed rows:
-- Warehouse rows:
-- Duplicate order_id:
-- Source total sales:
-- Warehouse total sales:
-- Validation status:
+### 3. มี record ถูก reject กี่รายการ
+**ตอบ:** ถูก Reject ทั้งหมด **4 รายการ** 
+*(ประกอบด้วย Order ID: O0007 (`qty` ติดลบ), O0021 (`discount_pct` เท่ากับ 150), O0034 (`order_date` ไม่ถูกต้อง), และ O0091 (`unit_price` ติดลบ))*
 
-## 5. Idempotency Test
-จำนวน fact_sales หลัง run ครั้งที่ 1:
+---
 
-จำนวน fact_sales หลัง run ครั้งที่ 2:
+### 4. ยอดขายรวมหลัง Transform เท่าไร
+**ตอบ:** ยอดขายรวม (`source_total_sales`) เท่ากับ **192,074.63 บาท**
 
-อธิบายผล:
+---
+
+### 5. เมื่อลอง run pipeline ซ้ำ fact_sales เพิ่มหรือไม่ เพราะอะไร
+**ตอบ:** **ไม่เพิ่ม** (จำนวนเรคคอร์ดใน `fact_sales` ยังคงเป็น 100 รายการเท่าเดิม) 
+
+**เหตุผล:** เนื่องจากในขั้นตอนการสร้างตารางบน SQLite มีการกำหนด `PRIMARY KEY` ให้กับคอลัมน์ `order_id` และใช้คำสั่ง `INSERT OR IGNORE` ในการโหลดข้อมูล หากรัน Pipeline ซ้ำ ระบบจะข้ามคำสั่งซื้อที่มี `order_id` ซ้ำในฐานข้อมูลโดยอัตโนมัติ ทำให้ไม่เกิดข้อมูลซ้ำซ้อน
