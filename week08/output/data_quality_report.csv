@@ -1,0 +1,11 @@
+﻿step,issue,count
+1_Extract,Raw Orders Jan Count,361
+1_Extract,Raw Orders Feb Count,391
+1_Extract,Raw Customers Count,163
+1_Extract,Raw Products Count,40
+1_Extract,Raw Payments Count,752
+3_Cleaning,Duplicate Orders Removed,2
+4_Merge,Orders without Payment Record,0
+4_Merge,Orders with Unmatched Customer ID,22
+4_Merge,Orders with Unmatched Product ID,2
+5_Validation,Filtered Non-Paid or Invalid Value Orders,90
