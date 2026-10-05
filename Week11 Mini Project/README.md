@@ -55,8 +55,6 @@ Dashboard นี้จัดทำขึ้นสำหรับรายวิ�
 
 ### Page 1: Production & Defect Trend
 
-**คำถามหลัก: เราผลิตได้ดีแค่ไหน?**
-
 ประกอบด้วย:
 
 - Total Production
@@ -73,8 +71,6 @@ Dashboard นี้จัดทำขึ้นสำหรับรายวิ�
 
 ### Page 2: Defect Analysis
 
-**คำถามหลัก: ปัญหาเกิดจากอะไร?**
-
 ประกอบด้วย:
 
 - Defect Type Analysis
@@ -86,8 +82,6 @@ Dashboard นี้จัดทำขึ้นสำหรับรายวิ�
 ---
 
 ### Page 3: AI Quality Insight
-
-**คำถามหลัก: AI ช่วยแก้ปัญหาอย่างไร?**
 
 ประกอบด้วย:
 
@@ -152,15 +146,9 @@ GLASSCORE-AI-Dashboard/
 │   └── GLASSCORE_AI_Dashboard.pbix
 │
 ├── screenshots/
-│   ├── overview.png
-│   ├── defect_analysis.png
-│   └── ai_insight.png
-│
-├── documentation/
-│   └── dashboard_description.pdf
-│
-└── members/
-    └── group_members.txt
+    ├── overview.png
+    ├── defect_analysis.png
+    └── ai_insight.png
 ```
 
 ---
@@ -169,13 +157,8 @@ GLASSCORE-AI-Dashboard/
 
 | No. | Name | Role |
 |---|---|---|
-| 1 | [ชื่อสมาชิก] | Project Leader |
-| 2 | [ชื่อสมาชิก] | Data / Dashboard |
-| 3 | [ชื่อสมาชิก] | AI / Technology |
-| 4 | [ชื่อสมาชิก] | Business / Presentation |
-| 5 | [ชื่อสมาชิก] | QA / Documentation |
+| 1 | [นาย ศุภกริชณ์ เจริญวุฒิวนพันธ์] | Project Leader / Data / Dashboard / AI / Technology / Business / Presentation / QA / Documentation |
 
-> สามารถแก้ไขรายชื่อและบทบาทให้ตรงกับสมาชิกจริงของกลุ่มก่อนส่ง Repository
 
 ---
 
